@@ -6,6 +6,7 @@
 
   if(isset($_POST['get_users']))
   {
+    $is_search = false;
     $res = selectAll('user_cred');    
     $i=1;
     $path = USERS_IMG_PATH;
@@ -58,7 +59,9 @@
       $i++;
     }
 
-    echo $data;
+    echo $data !== '' ? $data : ($is_search
+      ? empty_row(10, 'No guests match that name', 'Check the spelling or clear the search box.', 'bi-search')
+      : empty_row(10, 'No guests yet', 'Guests appear here as soon as they create an account on the website.', 'bi-people'));
   }
 
   if(isset($_POST['toggle_status']))
@@ -93,6 +96,7 @@
 
   if(isset($_POST['search_user']))
   {
+    $is_search = true;
     $frm_data = filteration($_POST);
 
     $query = "SELECT * FROM `user_cred` WHERE `name` LIKE ?";
@@ -149,7 +153,9 @@
       $i++;
     }
 
-    echo $data;
+    echo $data !== '' ? $data : ($is_search
+      ? empty_row(10, 'No guests match that name', 'Check the spelling or clear the search box.', 'bi-search')
+      : empty_row(10, 'No guests yet', 'Guests appear here as soon as they create an account on the website.', 'bi-people'));
   }
 
 ?>

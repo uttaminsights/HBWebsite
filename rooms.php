@@ -28,9 +28,11 @@
     }
   ?>
 
-  <div class="my-5 px-4">
-    <h2 class="fw-bold h-font text-center">OUR ROOMS</h2>
-    <div class="h-line bg-dark"></div>
+  <div class="section-title" style="margin-top:4rem">
+    <span class="eyebrow">Stay</span>
+    <h2 class="h-font m-0">Rooms &amp; suites</h2>
+    <div class="h-line"></div>
+    <p>Filter by dates, guests and facilities to find the room that fits your trip.</p>
   </div>
 
   <div class="container-fluid">

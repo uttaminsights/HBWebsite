@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  php-lint:
+    name: PHP syntax check (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2', '8.3' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: none
+      - name: Lint project PHP files
+        run: |
+          find . -name '*.php' \
+            -not -path './admin/inc/mpdf/*' \
+            -not -path './inc/sendgrid/*' \
+            -print0 | xargs -0 -n1 -P4 php -l -d display_errors=1 > lint.log || { grep -v '^No syntax errors' lint.log; exit 1; }
+          echo "All files passed."
+
+  database:
+    name: Import database dump
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hbwebsite
+        ports: [ '3306:3306' ]
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import schema and seed data
+        run: mysql -h 127.0.0.1 -uroot -proot hbwebsite < DATABASE_FILE/hbwebsite.sql
+      - name: Check tables exist
+        run: mysql -h 127.0.0.1 -uroot -proot hbwebsite -e "SHOW TABLES;" | tee tables.txt && grep -q booking_order tables.txt

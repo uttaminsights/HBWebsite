@@ -31,7 +31,7 @@
         "text/html", 
         "
           Click the link to $content: <br>
-          <a href='".SITE_URL."$page?$type&email=$uemail&token=$token"."'>
+          <a href='".SITE_URL."$page?$type&email=".urlencode($uemail)."&token=$token"."'>
             CLICK ME
           </a>
         "
@@ -87,7 +87,11 @@
 
     $token = bin2hex(random_bytes(16));
 
-    if(!send_mail($data['email'],$token,"email_confirmation")){
+    // Without SendGrid configured (e.g. local development) there is no way to email
+    // a verification link, so the account is activated straight away.
+    $email_enabled = (SENDGRID_API_KEY !== '' && SENDGRID_EMAIL !== '');
+
+    if($email_enabled && !send_mail($data['email'],$token,"email_confirmation")){
       echo 'mail_failed';
       exit;
     }
@@ -95,13 +99,13 @@
     $enc_pass = password_hash($data['pass'],PASSWORD_BCRYPT);
 
     $query = "INSERT INTO `user_cred`(`name`, `email`, `address`, `phonenum`, `pincode`, `dob`,
-      `profile`, `password`, `token`) VALUES (?,?,?,?,?,?,?,?,?)";
+      `profile`, `password`, `token`, `is_verified`) VALUES (?,?,?,?,?,?,?,?,?,?)";
       
     $values = [$data['name'],$data['email'],$data['address'],$data['phonenum'],$data['pincode'],$data['dob'],
-      $img,$enc_pass,$token];
+      $img,$enc_pass,($email_enabled ? $token : null),($email_enabled ? 0 : 1)];
 
-    if(insert($query,$values,'sssssssss')){
-      echo 1;
+    if(insert($query,$values,'sssssssssi')){
+      echo $email_enabled ? 1 : 'verified';
     }
     else{
       echo 'ins_failed';
@@ -128,11 +132,12 @@
         echo 'inactive';
       }
       else{
-        if(password_verify($data['pass'],$u_fetch['password'])){
+        if(!password_verify($data['pass'],$u_fetch['password'])){
           echo 'invalid_pass';
         }
         else{
-          session_start();
+          app_session_start();
+          session_regenerate_id(true);
           $_SESSION['login'] = true;
           $_SESSION['uId'] = $u_fetch['id'];
           $_SESSION['uName'] = $u_fetch['name'];
@@ -173,10 +178,10 @@
         {
           $date = date("Y-m-d");
 
-          $query = mysqli_query($con,"UPDATE `user_cred` SET `token`='$token', `t_expire`='$date' 
-            WHERE `id`='$u_fetch[id]'");
+          $query = update("UPDATE `user_cred` SET `token`=?, `t_expire`=? WHERE `id`=?",
+            [$token,$date,$u_fetch['id']],'ssi');
 
-          if($query){
+          if($query!==false){
             echo 1;
           }
           else{
@@ -194,12 +199,13 @@
     
     $enc_pass = password_hash($data['pass'],PASSWORD_BCRYPT);
 
-    $query = "UPDATE `user_cred` SET `password`=?, `token`=?, `t_expire`=? 
-      WHERE `email`=? AND `token`=?";
+    // reset links are valid only on the day they were issued, and only once
+    $query = "UPDATE `user_cred` SET `password`=?, `token`=?, `t_expire`=?
+      WHERE `email`=? AND `token`=? AND `token` IS NOT NULL AND `t_expire`=?";
 
-    $values = [$enc_pass,null,null,$data['email'],$data['token']];
+    $values = [$enc_pass,null,null,$data['email'],$data['token'],date("Y-m-d")];
 
-    if(update($query,$values,'sssss'))
+    if(!empty($data['token']) && update($query,$values,'ssssss'))
     {
       echo 1;
     }

@@ -1,11 +1,14 @@
-<nav id="nav-bar" class="navbar navbar-expand-lg navbar-light bg-white px-lg-3 py-lg-2 shadow-sm sticky-top">
+<nav id="nav-bar" class="navbar navbar-expand-lg navbar-light bg-white px-lg-4 py-lg-2 sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand me-5 fw-bold fs-3 h-font" href="index.php"><?php echo $settings_r['site_title'] ?></a>
+    <a class="navbar-brand me-5" href="index.php">
+      <span class="brand-mark"><?php echo htmlspecialchars(mb_substr(html_entity_decode($settings_r['site_title']),0,1)) ?></span>
+      <?php echo $settings_r['site_title'] ?>
+    </a>
     <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link me-2" href="index.php">Home</a>
         </li>
@@ -16,21 +19,21 @@
           <a class="nav-link me-2" href="facilities.php">Facilities</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link me-2" href="contact.php">Contact us</a>
+          <a class="nav-link me-2" href="contact.php">Contact</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="about.php">About</a>
         </li>
       </ul>
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
         <?php 
           if(isset($_SESSION['login']) && $_SESSION['login']==true)
           {
             $path = USERS_IMG_PATH;
             echo<<<data
               <div class="btn-group">
-                <button type="button" class="btn btn-outline-dark shadow-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                  <img src="$path$_SESSION[uPic]" style="width: 25px; height: 25px;" class="me-1 rounded-circle">
+                <button type="button" class="btn btn-outline-dark btn-sm shadow-none dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                  <img src="$path$_SESSION[uPic]" class="me-2 rounded-circle nav-avatar" alt="">
                   $_SESSION[uName]
                 </button>
                 <ul class="dropdown-menu dropdown-menu-lg-end">
@@ -44,11 +47,11 @@
           else
           {
             echo<<<data
-              <button type="button" class="btn btn-outline-dark shadow-none me-lg-3 me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
-                Login
+              <button type="button" class="btn btn-link text-decoration-none shadow-none me-lg-2 me-1" style="color:var(--ink)" data-bs-toggle="modal" data-bs-target="#loginModal">
+                Sign in
               </button>
-              <button type="button" class="btn btn-outline-dark shadow-none" data-bs-toggle="modal" data-bs-target="#registerModal">
-                Register
+              <button type="button" class="btn custom-bg btn-sm shadow-none" data-bs-toggle="modal" data-bs-target="#registerModal">
+                Create account
               </button>
             data;
           }

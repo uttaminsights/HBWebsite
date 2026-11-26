@@ -3,6 +3,12 @@
   require('inc/db_config.php');
   adminLogin();
 
+  // state-changing links carry a per-session token (CSRF protection)
+  $csrf = csrf_token();
+  if((isset($_GET['seen']) || isset($_GET['del'])) && !hash_equals($csrf,(string)($_GET['t'] ?? ''))){
+    unset($_GET['seen'],$_GET['del']);
+  }
+
   if(isset($_GET['seen']))
   {
     $frm_data = filteration($_GET);
@@ -76,10 +82,10 @@
           <div class="card-body">
 
             <div class="text-end mb-4">
-              <a href="?seen=all" class="btn btn-dark rounded-pill shadow-none btn-sm">
+              <a href="?seen=all&t=<?php echo $csrf ?>" class="btn btn-dark rounded-pill shadow-none btn-sm">
                 <i class="bi bi-check-all"></i> Mark all read
               </a>
-              <a href="?del=all" class="btn btn-danger rounded-pill shadow-none btn-sm">
+              <a href="?del=all&t=<?php echo $csrf ?>" onclick="return confirm('Delete ALL entries?')" class="btn btn-danger rounded-pill shadow-none btn-sm">
                 <i class="bi bi-trash"></i> Delete all
               </a>
             </div>
@@ -107,15 +113,19 @@
                     $data = mysqli_query($con,$q);
                     $i=1;
 
+                    if(mysqli_num_rows($data)==0){
+                      echo empty_row(7, 'No reviews yet', 'Guests can rate their stay from My Bookings after they check out.', 'bi-star');
+                    }
+
                     while($row = mysqli_fetch_assoc($data))
                     {
                       $date = date('d-m-Y',strtotime($row['datentime']));
 
                       $seen='';
                       if($row['seen']!=1){
-                        $seen = "<a href='?seen=$row[sr_no]' class='btn btn-sm rounded-pill btn-primary mb-2'>Mark as read</a> <br>";
+                        $seen = "<a href='?seen=$row[sr_no]&t=$csrf' class='btn btn-sm rounded-pill btn-primary mb-2'>Mark as read</a> <br>";
                       }
-                      $seen.="<a href='?del=$row[sr_no]' class='btn btn-sm rounded-pill btn-danger'>Delete</a>";
+                      $seen.="<a href='?del=$row[sr_no]&t=$csrf' class='btn btn-sm rounded-pill btn-danger'>Delete</a>";
 
                       echo<<<query
                         <tr>

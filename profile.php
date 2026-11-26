@@ -30,7 +30,7 @@
     <div class="row">
 
       <div class="col-12 my-5 px-4">
-        <h2 class="fw-bold">PROFILE</h2>
+        <h2 class="h-font">Your profile</h2>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none">HOME</a>
           <span class="text-secondary"> > </span>
@@ -90,6 +90,10 @@
           <form id="pass-form">
             <h5 class="mb-3 fw-bold">Change Password</h5>
             <div class="row">
+              <div class="col-md-12 mb-3">
+                <label class="form-label">Current Password</label>
+                <input name="current_pass" type="password" class="form-control shadow-none" required>
+              </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label">New Password</label>
                 <input name="new_pass" type="password" class="form-control shadow-none" required>
@@ -194,6 +198,7 @@
 
       let data = new FormData();
       data.append('pass_form','');
+      data.append('current_pass',pass_form.elements['current_pass'].value);
       data.append('new_pass',new_pass);
       data.append('confirm_pass',confirm_pass);
 
@@ -204,6 +209,9 @@
       {
         if(this.responseText == 'mismatch'){
           alert('error',"Password do not match!");
+        }
+        else if(this.responseText == 'wrong_current'){
+          alert('error',"Current password is incorrect!");
         }
         else if(this.responseText == 0){
           alert('error',"Updation failed!");

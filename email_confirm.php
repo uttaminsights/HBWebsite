@@ -18,7 +18,7 @@
         echo"<script>alert('Email already verified!')</script>";
       }
       else{
-        $update = update("UPDATE `user_cred` SET `is_verified`= ? WHERE `id`=?",[1,$fetch['id']],'ii');
+        $update = update("UPDATE `user_cred` SET `is_verified`=?, `token`=NULL WHERE `id`=?",[1,$fetch['id']],'ii');
         if($update){
           echo"<script>alert('Email verification successful!')</script>";
         }

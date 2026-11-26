@@ -1,0 +1,18 @@
+# Uploaded files must never be executed as code.
+<FilesMatch "\.(php|phtml|php\d|phar|pl|py|cgi|sh|html?|js)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+Options -Indexes -ExecCGI
+
+# SVGs are images only: block any script inside them even if one slips through.
+<IfModule mod_headers.c>
+  <FilesMatch "\.svg$">
+    Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+  </FilesMatch>
+</IfModule>

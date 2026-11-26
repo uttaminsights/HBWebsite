@@ -16,9 +16,9 @@
       WHERE ((bo.booking_status='booked' AND bo.arrival=1) 
       OR (bo.booking_status='cancelled' AND bo.refund=1)
       OR (bo.booking_status='payment failed')) 
-      AND bo.booking_id = '$frm_data[id]'";
+      AND bo.booking_id = ?";
 
-    $res = mysqli_query($con,$query);
+    $res = select($query,[$frm_data['id']],'i');
     $total_rows = mysqli_num_rows($res);
 
     if($total_rows==0){
@@ -26,7 +26,7 @@
       exit;
     }
 
-    $data = mysqli_fetch_assoc($res);
+    $data = array_map(function($v){ return htmlspecialchars((string)$v,ENT_QUOTES,"UTF-8",false); }, mysqli_fetch_assoc($res));
 
     $date = date("h:ia | d-m-Y",strtotime($data['datentime']));
     $checkin = date("d-m-Y",strtotime($data['check_in']));

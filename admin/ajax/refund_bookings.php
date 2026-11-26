@@ -19,7 +19,7 @@
     $table_data = "";
 
     if(mysqli_num_rows($res)==0){
-      echo"<b>No Data Found!</b>";
+      echo empty_row_search(5, $frm_data['search'], 'No refunds pending', 'When a guest cancels a paid booking it will appear here so you can refund it.', 'bi-arrow-counterclockwise');
       exit;
     }
 

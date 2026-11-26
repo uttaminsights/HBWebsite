@@ -2,7 +2,7 @@
   require('inc/essentials.php');
   require('inc/db_config.php');
 
-  session_start();
+  app_session_start();
   if((isset($_SESSION['adminLogin']) && $_SESSION['adminLogin']==true)){
     redirect('dashboard.php');
   }
@@ -26,19 +26,22 @@
     }
   </style>
 </head>
-<body class="bg-light">
+<body class="admin-login-bg">
   
   <div class="login-form text-center rounded bg-white shadow overflow-hidden">
     <form method="POST">
-      <h4 class="bg-dark text-white py-3">ADMIN LOGIN PANEL</h4>
+      <?php $lb = mysqli_fetch_assoc(mysqli_query($con,"SELECT `site_title` FROM `settings` WHERE `sr_no`=1")); ?>
+      <div class="pt-5"><span class="login-mark"><?php echo htmlspecialchars(mb_substr(html_entity_decode($lb['site_title'] ?? 'A'),0,1)) ?></span></div>
+      <h4 class="h-font pt-3 pb-1 mb-0" style="font-size:2.2rem;padding-top:1.2rem !important"><?php echo $lb['site_title'] ?? 'Admin' ?></h4>
+      <p class="small mb-0" style="color:#8e8e9a">Sign in to the admin dashboard</p>
       <div class="p-4">
         <div class="mb-3">
-          <input name="admin_name" required type="text" class="form-control shadow-none text-center" placeholder="Admin Name">
+          <input name="admin_name" required type="text" class="form-control shadow-none text-center py-3" placeholder="Admin username">
         </div>
         <div class="mb-4">
-          <input name="admin_pass" required type="password" class="form-control shadow-none text-center" placeholder="Password">
+          <input name="admin_pass" required type="password" class="form-control shadow-none text-center py-3" placeholder="Password">
         </div>
-        <button name="login" type="submit" class="btn text-white custom-bg shadow-none">LOGIN</button>
+        <button name="login" type="submit" class="btn custom-bg shadow-none w-100 py-3">Enter dashboard <i class="bi bi-arrow-right ms-1"></i></button>
       </div>
     </form>
   </div>
@@ -50,12 +53,26 @@
     {
       $frm_data = filteration($_POST);
 
-      $query = "SELECT * FROM  `admin_cred` WHERE `admin_name`=? AND `admin_pass`=?";
-      $values = [$frm_data['admin_name'],$frm_data['admin_pass']];
+      $query = "SELECT * FROM  `admin_cred` WHERE `admin_name`=? LIMIT 1";
+      $res = select($query,[$frm_data['admin_name']],"s");
+      $row = ($res->num_rows==1) ? mysqli_fetch_assoc($res) : null;
 
-      $res = select($query,$values,"ss");
-      if($res->num_rows==1){
-        $row = mysqli_fetch_assoc($res);
+      $valid = false;
+      if($row){
+        $stored = $row['admin_pass'];
+        if(password_get_info($stored)['algo']){
+          $valid = password_verify($frm_data['admin_pass'],$stored);
+        }
+        else if(hash_equals($stored,$frm_data['admin_pass'])){
+          // legacy plain-text password: accept once and upgrade to a hash
+          $valid = true;
+          update("UPDATE `admin_cred` SET `admin_pass`=? WHERE `sr_no`=?",
+            [password_hash($frm_data['admin_pass'],PASSWORD_DEFAULT),$row['sr_no']],'si');
+        }
+      }
+
+      if($valid){
+        session_regenerate_id(true);
         $_SESSION['adminLogin'] = true;
         $_SESSION['adminId'] = $row['sr_no'];
         redirect('dashboard.php');

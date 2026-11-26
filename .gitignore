@@ -1,0 +1,15 @@
+# Local secrets / settings
+config.php
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Customer profile photos are uploaded at runtime - never commit them
+images/users/*
+!images/users/.gitkeep

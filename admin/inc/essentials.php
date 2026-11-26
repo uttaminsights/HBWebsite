@@ -1,8 +1,10 @@
 <?php 
 
+  require_once(__DIR__.'/config_loader.php');
+
   //frontend purpose data
 
-  define('SITE_URL','http://127.0.0.1/hbwebsite/');
+  define('SITE_URL',app_base_url());
   define('ABOUT_IMG_PATH',SITE_URL.'images/about/');
   define('CAROUSEL_IMG_PATH',SITE_URL.'images/carousel/');
   define('FACILITIES_IMG_PATH',SITE_URL.'images/facilities/');
@@ -12,7 +14,7 @@
 
   //backend upload process needs this data
 
-  define('UPLOAD_IMAGE_PATH',$_SERVER['DOCUMENT_ROOT'].'/hbwebsite/images/');
+  define('UPLOAD_IMAGE_PATH',PROJECT_ROOT.'/images/');
   define('ABOUT_FOLDER','about/');
   define('CAROUSEL_FOLDER','carousel/');
   define('FACILITIES_FOLDER','facilities/');
@@ -21,9 +23,9 @@
 
   // sendgrid api key
 
-  define('SENDGRID_API_KEY',"PASTE YOUR API KEY GENERATED FROM SENDGRID WEBSITE");
-  define('SENDGRID_EMAIL',"PUT YOU EMAIL");
-  define('SENDGRID_NAME',"ANY NAME");
+  define('SENDGRID_API_KEY',app_config('sendgrid_api_key',''));
+  define('SENDGRID_EMAIL',app_config('sendgrid_email',''));
+  define('SENDGRID_NAME',app_config('sendgrid_name','Hotel Booking'));
 
   // Possible "booking status" values in db = pending, booked, payment failed, cancelled
   
@@ -31,7 +33,7 @@
 
   function adminLogin()
   {
-    session_start();
+    app_session_start();
     if(!(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin']==true)){
       echo"<script>
         window.location.href='index.php';
@@ -58,20 +60,39 @@
     alert;
   }
 
+  // Detects the real MIME type from file contents (never trust $_FILES['type']).
+  function detectMime($tmp_path)
+  {
+    if(!is_uploaded_file($tmp_path) && !is_file($tmp_path)){
+      return '';
+    }
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    return (string) $finfo->file($tmp_path);
+  }
+
+  function randomImageName($ext)
+  {
+    return 'IMG_'.bin2hex(random_bytes(8)).'.'.$ext;
+  }
+
   function uploadImage($image,$folder)
   {
-    $valid_mime = ['image/jpeg','image/png','image/webp'];
-    $img_mime = $image['type'];
+    $ext_map = ['image/jpeg'=>'jpg','image/png'=>'png','image/webp'=>'webp'];
 
-    if(!in_array($img_mime,$valid_mime)){
+    if(!isset($image['tmp_name']) || ($image['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK){
+      return 'upd_failed';
+    }
+
+    $img_mime = detectMime($image['tmp_name']);
+
+    if(!isset($ext_map[$img_mime]) || @getimagesize($image['tmp_name'])===false){
       return 'inv_img'; //invalid image mime or format
     }
     else if(($image['size']/(1024*1024))>2){
       return 'inv_size'; //invalid size greater than 2mb
     }
     else{
-      $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
-      $rname = 'IMG_'.random_int(11111,99999).".$ext";
+      $rname = randomImageName($ext_map[$img_mime]);
 
       $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
       if(move_uploaded_file($image['tmp_name'],$img_path)){
@@ -85,72 +106,138 @@
 
   function deleteImage($image, $folder)
   {
-    if(unlink(UPLOAD_IMAGE_PATH.$folder.$image)){
-      return true;
-    }
-    else{
+    $image = basename((string)$image);
+    if($image === '' || $image === '.' || $image === '..'){
       return false;
     }
+    $path = UPLOAD_IMAGE_PATH.$folder.$image;
+    return is_file($path) && unlink($path);
   }
 
   function uploadSVGImage($image,$folder)
   {
-    $valid_mime = ['image/svg+xml'];
-    $img_mime = $image['type'];
-
-    if(!in_array($img_mime,$valid_mime)){
-      return 'inv_img'; //invalid image mime or format
+    if(!isset($image['tmp_name']) || ($image['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK){
+      return 'upd_failed';
     }
-    else if(($image['size']/(1024*1024))>1){
+
+    if(($image['size']/(1024*1024))>1){
       return 'inv_size'; //invalid size greater than 1mb
     }
-    else{
-      $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
-      $rname = 'IMG_'.random_int(11111,99999).".$ext";
 
-      $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
-      if(move_uploaded_file($image['tmp_name'],$img_path)){
-        return $rname;
-      }
-      else{
-        return 'upd_failed';
-      }
+    $svg = file_get_contents($image['tmp_name']);
+    $img_mime = detectMime($image['tmp_name']);
+
+    // must actually be SVG markup
+    if(!in_array($img_mime,['image/svg+xml','text/xml','application/xml','text/plain','text/html'])
+      || stripos($svg,'<svg')===false){
+      return 'inv_img';
+    }
+
+    // reject active content (scripts, event handlers, external entities, embedded HTML)
+    if(preg_match('/<\s*script|<\s*foreignObject|<\s*iframe|<\s*embed|<\s*object|<!ENTITY|<!DOCTYPE|\son[a-z]+\s*=|javascript:|data:text\/html/i',$svg)){
+      return 'inv_img';
+    }
+
+    $rname = randomImageName('svg');
+
+    $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
+    if(move_uploaded_file($image['tmp_name'],$img_path)){
+      return $rname;
+    }
+    else{
+      return 'upd_failed';
     }
   }
 
   function uploadUserImage($image)
   {
-    $valid_mime = ['image/jpeg','image/png','image/webp'];
-    $img_mime = $image['type'];
-
-    if(!in_array($img_mime,$valid_mime)){
-      return 'inv_img'; //invalid image mime or format
+    if(!isset($image['tmp_name']) || ($image['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK){
+      return 'inv_img';
     }
-    else
-    {
-      $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
-      $rname = 'IMG_'.random_int(11111,99999).".jpeg";
 
-      $img_path = UPLOAD_IMAGE_PATH.USERS_FOLDER.$rname;
-
-      if($ext == 'png' || $ext == 'PNG') {
-        $img = imagecreatefrompng($image['tmp_name']);
-      }
-      else if($ext == 'webp' || $ext == 'WEBP') {
-        $img = imagecreatefromwebp($image['tmp_name']);
-      }
-      else{
-        $img = imagecreatefromjpeg($image['tmp_name']);
-      }
-
-
-      if(imagejpeg($img,$img_path,75)){
-        return $rname;
-      }
-      else{
-        return 'upd_failed';
-      }
+    if(($image['size']/(1024*1024))>2){
+      return 'inv_img';
     }
+
+    $img_mime = detectMime($image['tmp_name']);
+
+    // re-encode to JPEG with GD: strips anything that isn't pixel data
+    if($img_mime == 'image/png') {
+      $img = @imagecreatefrompng($image['tmp_name']);
+    }
+    else if($img_mime == 'image/webp') {
+      $img = @imagecreatefromwebp($image['tmp_name']);
+    }
+    else if($img_mime == 'image/jpeg') {
+      $img = @imagecreatefromjpeg($image['tmp_name']);
+    }
+    else{
+      return 'inv_img';
+    }
+
+    if(!$img){
+      return 'inv_img';
+    }
+
+    $rname = randomImageName('jpeg');
+    $img_path = UPLOAD_IMAGE_PATH.USERS_FOLDER.$rname;
+
+    if(imagejpeg($img,$img_path,75)){
+      return $rname;
+    }
+    else{
+      return 'upd_failed';
+    }
+  }
+
+  // A full-width table row used when a list has nothing to show.
+  function empty_row($cols, $title, $hint = '', $icon = 'bi-inbox')
+  {
+    $cols = (int) $cols;
+    $hint_html = $hint !== '' ? "<div class='empty-hint'>$hint</div>" : '';
+    return "<tr class='empty-row'><td colspan='$cols'>
+      <div class='empty-state'>
+        <i class='bi $icon'></i>
+        <div class='empty-title'>$title</div>
+        $hint_html
+      </div>
+    </td></tr>";
+  }
+
+  // Search-aware variant: different wording when the admin typed a search term.
+  function empty_row_search($cols, $search, $title, $hint, $icon = 'bi-inbox')
+  {
+    if (trim((string) $search) !== '') {
+      return empty_row($cols, 'No results for &ldquo;' . $search . '&rdquo;', 'Try a different order ID, phone number or name.', 'bi-search');
+    }
+    return empty_row($cols, $title, $hint, $icon);
+  }
+
+  // Returns the URL only if it is http(s); otherwise '#'. Escaped for HTML attributes.
+  function safe_url($url)
+  {
+    $url = html_entity_decode((string)$url,ENT_QUOTES);
+    $scheme = strtolower((string)parse_url($url,PHP_URL_SCHEME));
+    if(!in_array($scheme,['http','https'],true)){
+      return '#';
+    }
+    return htmlspecialchars($url,ENT_QUOTES);
+  }
+
+  // True if at least one unit of the room is free for [checkin, checkout).
+  // Requires db_config.php to be loaded.
+  function room_has_vacancy($room_id,$checkin,$checkout)
+  {
+    $tb_query = "SELECT COUNT(*) AS `total_bookings` FROM `booking_order`
+      WHERE booking_status=? AND room_id=?
+      AND check_out > ? AND check_in < ?";
+    $tb_fetch = mysqli_fetch_assoc(select($tb_query,['booked',$room_id,$checkin,$checkout],'siss'));
+
+    $rq_fetch = mysqli_fetch_assoc(select("SELECT `quantity` FROM `rooms` WHERE `id`=?",[$room_id],'i'));
+    if(!$rq_fetch){
+      return false;
+    }
+    return ($rq_fetch['quantity'] - $tb_fetch['total_bookings']) > 0;
   }
 
 ?>

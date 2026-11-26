@@ -1,41 +1,67 @@
-<div class="container-fluid bg-white mt-5">
-  <div class="row">
-    <div class="col-lg-4 p-4">
-      <h3 class="h-font fw-bold fs-3 mb-2"><?php echo $settings_r['site_title'] ?></h3>
-      <p>
-        <?php echo $settings_r['site_about'] ?>
-      </p>
+<footer class="site-footer">
+  <div class="container">
+    <div class="row align-items-end mb-5 g-4">
+      <div class="col-lg-8">
+        <span class="eyebrow">Reservations open</span>
+        <h2 class="footer-cta">Your next trip<br>starts <span class="gold-text">right here.</span></h2>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="rooms.php" class="btn custom-bg px-4 py-3">Book your room <i class="bi bi-arrow-up-right ms-2"></i></a>
+      </div>
     </div>
-    <div class="col-lg-4 p-4">
-      <h5 class="mb-3">Links</h5>
-      <a href="index.php" class="d-inline-block mb-2 text-dark text-decoration-none">Home</a> <br>
-      <a href="rooms.php" class="d-inline-block mb-2 text-dark text-decoration-none">Rooms</a> <br>
-      <a href="facilities.php" class="d-inline-block mb-2 text-dark text-decoration-none">Facilities</a> <br>
-      <a href="contact.php" class="d-inline-block mb-2 text-dark text-decoration-none">Contact us</a> <br>
-      <a href="about.php" class="d-inline-block mb-2 text-dark text-decoration-none">About</a>
-    </div>
-    <div class="col-lg-4 p-4">
-        <h5 class="mb-3">Follow us</h5>
-        <?php 
-          if($contact_r['tw']!=''){
-            echo<<<data
-              <a href="$contact_r[tw]" class="d-inline-block text-dark text-decoration-none mb-2">
-                <i class="bi bi-twitter me-1"></i> Twitter
-              </a><br>
-            data;
-          }
-        ?>
-        <a href="<?php echo $contact_r['fb'] ?>" class="d-inline-block text-dark text-decoration-none mb-2">
-          <i class="bi bi-facebook me-1"></i> Facebook
-        </a><br>
-        <a href="<?php echo $contact_r['insta'] ?>" class="d-inline-block text-dark text-decoration-none">
-          <i class="bi bi-instagram me-1"></i> Instagram
-        </a><br>
+    <div class="row g-5 pt-4" style="border-top:1px solid var(--line)">
+      <div class="col-lg-5">
+        <h3 class="mb-3"><?php echo $settings_r['site_title'] ?></h3>
+        <p class="pe-lg-5"><?php echo $settings_r['site_about'] ?></p>
+        <div class="social mt-4">
+          <?php if($contact_r['fb']!=''): ?>
+            <a href="<?php echo safe_url($contact_r['fb']) ?>" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <?php endif; ?>
+          <?php if($contact_r['insta']!=''): ?>
+            <a href="<?php echo safe_url($contact_r['insta']) ?>" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <?php endif; ?>
+          <?php if($contact_r['tw']!=''): ?>
+            <a href="<?php echo safe_url($contact_r['tw']) ?>" target="_blank" rel="noopener" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+          <?php endif; ?>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Explore</h6>
+        <ul class="list-unstyled d-grid gap-2">
+          <li><a href="index.php">Home</a></li>
+          <li><a href="rooms.php">Rooms</a></li>
+          <li><a href="facilities.php">Facilities</a></li>
+          <li><a href="about.php">About</a></li>
+          <li><a href="contact.php">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Your stay</h6>
+        <ul class="list-unstyled d-grid gap-2">
+          <li><a href="bookings.php">My bookings</a></li>
+          <li><a href="profile.php">Profile</a></li>
+          <li><a href="rooms.php">Availability</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3">
+        <h6>Get in touch</h6>
+        <ul class="list-unstyled d-grid gap-2">
+          <li><i class="bi bi-geo-alt me-2" style="color:var(--gold)"></i><?php echo $contact_r['address'] ?></li>
+          <li><a href="tel:+<?php echo $contact_r['pn1'] ?>"><i class="bi bi-telephone me-2" style="color:var(--gold)"></i>+<?php echo $contact_r['pn1'] ?></a></li>
+          <li><a href="mailto:<?php echo $contact_r['email'] ?>"><i class="bi bi-envelope me-2" style="color:var(--gold)"></i><?php echo $contact_r['email'] ?></a></li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-
-<h6 class="text-center bg-dark text-white p-3 m-0">Designed and Developed by TJ WEBDEV</h6>
+  <div class="wordmark" aria-hidden="true"><?php echo strtoupper(html_entity_decode($settings_r['site_title'])) ?></div>
+  <div class="container">
+    <div class="bottom d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span>&copy; <?php echo date('Y') ?> <?php echo $settings_r['site_title'] ?>. All rights reserved.</span>
+      <span>Crafted by <span class="gold-text fw-bold">UttamInsights</span></span>
+    </div>
+  </div>
+</footer>
+<div id="scroll-progress"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
@@ -129,6 +155,10 @@
       }
       else if(this.responseText == 'ins_failed'){
         alert('error',"Registration failed! Server down!");
+      }
+      else if(this.responseText == 'verified'){
+        alert('success',"Account created! You can sign in now.");
+        register_form.reset();
       }
       else{
         alert('success',"Registration successful. Confirmation link sent to email!");
@@ -236,5 +266,29 @@
   }
 
   setActive();
+
+  // navbar shrink + scroll progress
+  (function(){
+    const nav = document.getElementById('nav-bar');
+    const bar = document.getElementById('scroll-progress');
+    function onScroll(){
+      const y = window.scrollY;
+      if(nav) nav.classList.toggle('scrolled', y > 40);
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      if(bar) bar.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  })();
+
+  // reveal-on-scroll for elements marked .reveal
+  (function(){
+    const els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ els.forEach(e=>e.classList.add('in')); return; }
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    },{threshold:.12});
+    els.forEach(e=>io.observe(e));
+  })();
 
 </script>

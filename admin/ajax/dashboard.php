@@ -23,13 +23,13 @@
     $result = mysqli_fetch_assoc(mysqli_query($con,"SELECT 
 
       COUNT(CASE WHEN booking_status!='pending'AND booking_status!='payment failed' THEN 1 END) AS `total_bookings`,
-      SUM(CASE WHEN booking_status!='pending' AND booking_status!='payment failed' THEN `trans_amt` END) AS `total_amt`,
+      COALESCE(SUM(CASE WHEN booking_status!='pending' AND booking_status!='payment failed' THEN `trans_amt` END),0) AS `total_amt`,
 
       COUNT(CASE WHEN booking_status='booked' AND arrival=1 THEN 1 END) AS `active_bookings`,
-      SUM(CASE WHEN booking_status='booked' AND arrival=1 THEN `trans_amt` END) AS `active_amt`,
+      COALESCE(SUM(CASE WHEN booking_status='booked' AND arrival=1 THEN `trans_amt` END),0) AS `active_amt`,
 
       COUNT(CASE WHEN booking_status='cancelled' AND refund=1 THEN 1 END) AS `cancelled_bookings`,
-      SUM(CASE WHEN booking_status='cancelled' AND refund=1 THEN `trans_amt` END) AS `cancelled_amt`
+      COALESCE(SUM(CASE WHEN booking_status='cancelled' AND refund=1 THEN `trans_amt` END),0) AS `cancelled_amt`
 
       FROM `booking_order` $condition"));
 

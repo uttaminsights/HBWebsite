@@ -11,14 +11,11 @@
 
   <?php require('inc/header.php'); ?>
 
-  <div class="my-5 px-4">
-    <h2 class="fw-bold h-font text-center">CONTACT US</h2>
-    <div class="h-line bg-dark"></div>
-    <p class="text-center mt-3">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Temporibus incidunt odio quos <br> dolore commodi repudiandae 
-      tenetur consequuntur et similique asperiores.
-    </p>
+  <div class="section-title" style="margin-top:4rem">
+    <span class="eyebrow">Say hello</span>
+    <h2 class="h-font m-0">Contact us</h2>
+    <div class="h-line"></div>
+    <p>Questions about a booking, a special request or just directions? Our team usually replies within a few hours.</p>
   </div>
 
   <div class="container">
@@ -26,10 +23,10 @@
       <div class="col-lg-6 col-md-6 mb-5 px-4">
 
         <div class="bg-white rounded shadow p-4">
-          <iframe class="w-100 rounded mb-4" height="320px" src="<?php echo $contact_r['iframe'] ?>" loading="lazy"></iframe>
+          <iframe class="w-100 rounded mb-4" height="320px" src="<?php echo safe_url($contact_r['iframe']) ?>" loading="lazy"></iframe>
 
           <h5>Address</h5>
-          <a href="<?php echo $contact_r['gmap'] ?>" target="_blank" class="d-inline-block text-decoration-none text-dark mb-2">
+          <a href="<?php echo safe_url($contact_r['gmap']) ?>" target="_blank" class="d-inline-block text-decoration-none text-dark mb-2">
             <i class="bi bi-geo-alt-fill"></i> <?php echo $contact_r['address'] ?>
           </a>
 

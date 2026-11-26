@@ -38,7 +38,7 @@ CREATE TABLE `admin_cred` (
 --
 
 INSERT INTO `admin_cred` (`sr_no`, `admin_name`, `admin_pass`) VALUES
-(1, 'tjwebdev', '12345');
+(1, 'uttaminsights', '$2y$10$Abp7VJSGuAptQB.6Af0pwOUHvHH0Fhsxok7c.7ebSdd7F68kAqJFm');
 
 -- --------------------------------------------------------
 
@@ -62,24 +62,6 @@ CREATE TABLE `booking_details` (
 -- Dumping data for table `booking_details`
 --
 
-INSERT INTO `booking_details` (`sr_no`, `booking_id`, `room_name`, `price`, `total_pay`, `room_no`, `user_name`, `phonenum`, `address`) VALUES
-(1, 1, 'Simple Room', 300, 300, NULL, 'tjwebdev', '123', 'ad'),
-(2, 2, 'Simple Room', 300, 600, 'a2', 'tjwebdev', '123', 'ad'),
-(3, 3, 'Simple Room', 300, 1800, NULL, 'tjwebdev', '123', 'ad'),
-(4, 4, 'Supreme deluxe room', 900, 4500, NULL, 'tjwebdev', '123', 'ad'),
-(5, 5, 'Supreme deluxe room', 900, 900, NULL, 'tjwebdev', '123', 'ad'),
-(6, 6, 'Supreme deluxe room', 900, 7200, '52', 'tjwebdev', '12323432', 'ad2342343'),
-(7, 7, 'Supreme deluxe room', 900, 900, NULL, 'tjwebdev', '123', 'ad'),
-(8, 8, 'Simple Room', 300, 600, NULL, 'tjwebdev', '123', 'ad'),
-(9, 9, 'Luxury Room', 600, 3000, '159A', 'tj webdev', '123', 'ad'),
-(10, 10, 'Luxury Room', 600, 1800, '15S', 'tj webdev', '123', 'ad'),
-(11, 11, 'Supreme deluxe room', 900, 2700, '1', 'tj webdev', '123', 'ad'),
-(12, 12, 'Simple Room', 300, 1200, '2', 'tj webdev', '123', 'ad'),
-(13, 13, 'Deluxe Room', 500, 3000, '23', 'tj webdev', '123', 'ad'),
-(14, 14, 'Luxury Room', 600, 2400, '44', 'tj webdev', '123', 'ad'),
-(15, 15, 'Luxury Room', 600, 1200, NULL, 'tj webdev', '123', 'ad'),
-(16, 16, 'Luxury Room', 600, 1200, '1', 'tj webdev', '123', 'ad'),
-(17, 17, 'Simple Room', 300, 900, '20A', 'tj webdev', '123', 'ad');
 
 -- --------------------------------------------------------
 
@@ -109,24 +91,6 @@ CREATE TABLE `booking_order` (
 -- Dumping data for table `booking_order`
 --
 
-INSERT INTO `booking_order` (`booking_id`, `user_id`, `room_id`, `check_in`, `check_out`, `arrival`, `refund`, `booking_status`, `order_id`, `trans_id`, `trans_amt`, `trans_status`, `trans_resp_msg`, `rate_review`, `datentime`) VALUES
-(1, 2, 3, '2022-07-20', '2022-07-21', 0, NULL, 'pending', 'ORD_21055700', NULL, 0, 'pending', NULL, NULL, '2022-07-20 01:50:12'),
-(2, 2, 3, '2022-07-20', '2022-07-22', 1, NULL, 'booked', 'ORD_24215693', '20220720111212800110168128204225279', 600, 'TXN_SUCCESS', 'Txn Success', NULL, '2022-07-20 02:14:44'),
-(3, 2, 3, '2022-07-20', '2022-07-26', 0, 1, 'cancelled', 'ORD_26312547', '20220720111212800110168165603901976', 1800, 'TXN_SUCCESS', 'Txn Success', NULL, '2022-07-20 02:19:00'),
-(4, 2, 6, '2022-07-20', '2022-07-25', 0, NULL, 'payment failed', 'ORD_28394638', '20220720111212800110168372503893816', 4500, 'TXN_FAILURE', 'Your payment has been declined by your bank. Please try again or use a different method to complete the payment.', NULL, '2022-07-20 02:30:52'),
-(5, 2, 6, '2022-07-20', '2022-07-21', 0, 1, 'cancelled', 'ORD_22877860', '20220720111212800110168627705312020', 900, 'TXN_SUCCESS', 'Txn Success', NULL, '2022-07-20 02:32:09'),
-(6, 2, 6, '2022-07-20', '2022-07-28', 1, NULL, 'booked', 'ORD_28689687', '20220720111212800110168303704048087', 7200, 'TXN_SUCCESS', 'Txn Success', 1, '2022-07-20 02:34:46'),
-(7, 2, 6, '2022-07-29', '2022-07-30', 0, NULL, 'pending', 'ORD_24272313', NULL, 0, 'pending', NULL, NULL, '2022-07-29 01:13:42'),
-(8, 2, 3, '2022-08-14', '2022-08-16', 0, 1, 'cancelled', 'ORD_22541670', '20220814111212800110168092803967754', 600, 'TXN_SUCCESS', 'Txn Success', NULL, '2022-08-14 01:16:05'),
-(9, 2, 5, '2022-08-15', '2022-08-20', 1, NULL, 'booked', 'ORD_25267746', '20220815111212800110168656003990120', 3000, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-15 19:32:05'),
-(10, 2, 5, '2022-08-18', '2022-08-21', 1, NULL, 'booked', 'ORD_27668816', '20220815111212800110168905703947446', 1800, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-15 19:32:58'),
-(11, 2, 6, '2022-08-20', '2022-08-23', 1, NULL, 'booked', 'ORD_25750549', '20220820111212800110168431303975409', 2700, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-20 00:19:57'),
-(12, 2, 3, '2022-08-20', '2022-08-24', 1, NULL, 'booked', 'ORD_2445093', '20220820111212800110168173403969278', 1200, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-20 00:20:23'),
-(13, 2, 4, '2022-08-20', '2022-08-26', 1, NULL, 'booked', 'ORD_29233995', '20220820111212800110168584503978338', 3000, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-20 00:20:45'),
-(14, 2, 5, '2022-08-20', '2022-08-24', 1, NULL, 'booked', 'ORD_28902800', '20220820111212800110168816503988359', 2400, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-20 00:21:06'),
-(15, 2, 5, '2022-08-25', '2022-08-27', 0, 1, 'cancelled', 'ORD_2240367', '20220825111212800110168807304010818', 1200, 'TXN_SUCCESS', 'Txn Success', NULL, '2019-08-21 01:51:28'),
-(16, 2, 5, '2022-08-26', '2022-08-28', 1, NULL, 'booked', 'ORD_28784829', '20220825111212800110168627505415606', 1200, 'TXN_SUCCESS', 'Txn Success', 1, '2022-08-25 01:52:04'),
-(17, 2, 3, '2022-09-08', '2022-09-11', 1, NULL, 'booked', 'ORD_21289330', '20220908111212800110168809204050263', 900, 'TXN_SUCCESS', 'Txn Success', 0, '2022-09-08 01:15:30');
 
 -- --------------------------------------------------------
 
@@ -144,11 +108,11 @@ CREATE TABLE `carousel` (
 --
 
 INSERT INTO `carousel` (`sr_no`, `image`) VALUES
-(4, 'IMG_62045.png'),
-(5, 'IMG_93127.png'),
-(6, 'IMG_99736.png'),
-(8, 'IMG_40905.png'),
-(9, 'IMG_55677.png');
+(4, 'IMG_8cff722cdd260cee.jpg'),
+(5, 'IMG_9ce1a39ca6d346ed.jpg'),
+(6, 'IMG_149af8321bad8b2b.jpg'),
+(8, 'IMG_b2ee7099dbff4948.jpg'),
+(9, 'IMG_daa2bd5994c6acfc.jpg');
 
 -- --------------------------------------------------------
 
@@ -174,7 +138,7 @@ CREATE TABLE `contact_details` (
 --
 
 INSERT INTO `contact_details` (`sr_no`, `address`, `gmap`, `pn1`, `pn2`, `email`, `fb`, `insta`, `tw`, `iframe`) VALUES
-(1, 'XYZ, Prayagraj, Uttar Pradesh', 'https://goo.gl/maps/T1YM8d4fJsoczstd6', 918529636985, 91111222333558, 'ask.tjwebdev@gm.com', 'https://www.facebook.com/', 'https://www.facebook.com/', 'https://www.facebook.com/', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d461321.73752665165!2d81.801585!3d25.402264!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398534c9b20bd49f:0xa2237856ad4041a!2sPrayagraj, Uttar Pradesh!5e0!3m2!1sen!2sin!4v1644867099910!5m2!1sen!2sin');
+(1, 'Civil Lines, Prayagraj, Uttar Pradesh', 'https://goo.gl/maps/T1YM8d4fJsoczstd6', 910000000000, 910000000001, 'stay@nivaara.com', 'https://www.facebook.com/', 'https://www.instagram.com/', 'https://x.com/', 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d461321.73752665165!2d81.801585!3d25.402264!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398534c9b20bd49f:0xa2237856ad4041a!2sPrayagraj, Uttar Pradesh!5e0!3m2!1sen!2sin!4v1644867099910!5m2!1sen!2sin');
 
 -- --------------------------------------------------------
 
@@ -194,12 +158,12 @@ CREATE TABLE `facilities` (
 --
 
 INSERT INTO `facilities` (`id`, `icon`, `name`, `description`) VALUES
-(13, 'IMG_43553.svg', 'Wifi', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.'),
-(14, 'IMG_49949.svg', 'Air conditioner', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.'),
-(15, 'IMG_41622.svg', 'Television', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.'),
-(17, 'IMG_47816.svg', 'Spa', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.'),
-(18, 'IMG_96423.svg', 'Room Heater', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.'),
-(19, 'IMG_27079.svg', 'Geyser', 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus incidunt odio quos dolore commodi repudiandae tenetur.');
+(13, 'IMG_43553.svg', 'Wifi', 'Fast, free fibre Wi-Fi in every room and common area - stream, video-call and work without the lag.'),
+(14, 'IMG_49949.svg', 'Air conditioner', 'Quiet, individually controlled air conditioning so your room is exactly as cool as you like it.'),
+(15, 'IMG_41622.svg', 'Television', 'Smart TVs with your favourite streaming apps, so you can pick up right where you left off at home.'),
+(17, 'IMG_47816.svg', 'Spa', 'Unwind with massages, steam and wellness rituals at our in-house spa. Book a slot at the front desk.'),
+(18, 'IMG_96423.svg', 'Room Heater', 'Cosy room heaters for chilly nights - warm up in minutes at the touch of a button.'),
+(19, 'IMG_27079.svg', 'Geyser', 'Round-the-clock hot water with a dedicated geyser in every bathroom. No waiting, ever.');
 
 -- --------------------------------------------------------
 
@@ -217,10 +181,10 @@ CREATE TABLE `features` (
 --
 
 INSERT INTO `features` (`id`, `name`) VALUES
-(13, 'bedroom'),
-(14, 'balcony'),
-(15, 'kitchen'),
-(17, 'sofa');
+(13, 'Bedroom'),
+(14, 'Private balcony'),
+(15, 'Kitchenette'),
+(17, 'Lounge sofa');
 
 -- --------------------------------------------------------
 
@@ -243,14 +207,6 @@ CREATE TABLE `rating_review` (
 -- Dumping data for table `rating_review`
 --
 
-INSERT INTO `rating_review` (`sr_no`, `booking_id`, `room_id`, `user_id`, `rating`, `review`, `seen`, `datentime`) VALUES
-(4, 14, 5, 2, 5, '1asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:25'),
-(5, 13, 4, 2, 3, '2asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:30'),
-(6, 12, 3, 2, 1, '3asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:34'),
-(8, 14, 5, 2, 5, '1asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:25'),
-(9, 12, 3, 2, 1, '3asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:34'),
-(10, 12, 3, 2, 1, '3asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero ', 1, '2022-08-20 00:22:34'),
-(11, 16, 5, 2, 3, 'adfadfs', 1, '2022-09-08 01:14:18');
 
 -- --------------------------------------------------------
 
@@ -278,10 +234,10 @@ CREATE TABLE `rooms` (
 INSERT INTO `rooms` (`id`, `name`, `area`, `price`, `quantity`, `adult`, `children`, `description`, `status`, `removed`) VALUES
 (1, 'simple room', 159, 58, 56, 12, 2, 'asdf asd', 1, 1),
 (2, 'simple room 2', 785, 159, 85, 452, 10, 'adfasdfa sd', 1, 1),
-(3, 'Simple Room', 250, 300, 10, 5, 3, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero culpa error officiis totam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dic', 1, 0),
-(4, 'Deluxe Room', 300, 500, 10, 3, 2, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero culpa error officiis totam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dic', 1, 0),
-(5, 'Luxury Room', 600, 600, 2, 8, 6, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero culpa error officiis totam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dic', 1, 0),
-(6, 'Supreme deluxe room', 500, 900, 12, 9, 10, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero culpa error officiis totam?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dic', 1, 0);
+(3, 'Simple Room', 250, 300, 10, 5, 3, 'A bright, clutter-free room for smart travellers. Plush queen bed, blackout curtains, a proper work desk and a rain shower - everything you need for a great night, nothing you do not.', 1, 0),
+(4, 'Deluxe Room', 300, 500, 10, 3, 2, 'More space to spread out. Warm wood finishes, a king-size bed, a cosy reading corner and a balcony that catches the evening light. Perfect for couples and longer stays.', 1, 0),
+(5, 'Luxury Room', 600, 600, 2, 8, 6, 'Our signature room. Floor-to-ceiling windows, a lounge area with a deep sofa, premium linen and a spa-style bathroom. Ideal for families and anyone who likes a little extra.', 1, 0),
+(6, 'Supreme Deluxe Room', 500, 900, 12, 9, 10, 'The best seat in the house. A sprawling suite with a separate living room, private terrace views, a soaking tub and VIP perks like early check-in and late check-out.', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -363,16 +319,16 @@ CREATE TABLE `room_images` (
 --
 
 INSERT INTO `room_images` (`sr_no`, `room_id`, `image`, `thumb`) VALUES
-(15, 3, 'IMG_39782.png', 0),
-(16, 3, 'IMG_65019.png', 1),
-(17, 4, 'IMG_44867.png', 0),
-(18, 4, 'IMG_78809.png', 1),
-(19, 4, 'IMG_11892.png', 0),
-(21, 5, 'IMG_17474.png', 0),
-(22, 5, 'IMG_42663.png', 1),
-(23, 5, 'IMG_70583.png', 0),
-(24, 6, 'IMG_67761.png', 0),
-(25, 6, 'IMG_69824.png', 1);
+(15, 3, 'IMG_1655ec6cba83515a.jpg', 0),
+(16, 3, 'IMG_764654ef3d92937f.jpg', 1),
+(17, 4, 'IMG_4d16c986ab912285.jpg', 0),
+(18, 4, 'IMG_887c02ca5ae927c6.jpg', 1),
+(19, 4, 'IMG_893ce8d9c2e4277e.jpg', 0),
+(21, 5, 'IMG_27020c295b0bb095.jpg', 0),
+(22, 5, 'IMG_6317be5d1cb0e5f1.jpg', 1),
+(23, 5, 'IMG_4e90367619f0bd6b.jpg', 0),
+(24, 6, 'IMG_a774e28226cbb3e4.jpg', 0),
+(25, 6, 'IMG_4d47dd1f8b2954e4.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -392,7 +348,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`sr_no`, `site_title`, `site_about`, `shutdown`) VALUES
-(1, 'TJ Website', 'asdlkfj Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates impedit perspiciatis, nobis libero culpa error officiis totam?', 0);
+(1, 'Nivaara', 'Nivaara is a design-led boutique hotel for travellers who notice the details: quiet rooms, slow mornings and service that anticipates you. Book direct for the best rate.', 0);
 
 -- --------------------------------------------------------
 
@@ -410,8 +366,6 @@ CREATE TABLE `team_details` (
 -- Dumping data for table `team_details`
 --
 
-INSERT INTO `team_details` (`sr_no`, `name`, `picture`) VALUES
-(9, 'person 1', 'IMG_69318.jpg');
 
 -- --------------------------------------------------------
 
@@ -440,8 +394,6 @@ CREATE TABLE `user_cred` (
 -- Dumping data for table `user_cred`
 --
 
-INSERT INTO `user_cred` (`id`, `name`, `email`, `address`, `phonenum`, `pincode`, `dob`, `profile`, `password`, `is_verified`, `token`, `t_expire`, `status`, `datentime`) VALUES
-(2, 'tj webdev', 'tjwebdev@gmail.com', 'ad', '123', 123324, '2022-06-12', 'IMG_91058.jpeg', '$2y$10$2IsUjaIwxb/UuaR7abvUNOs/VKmwy848VPsNnswF4bIFRIMDE36zm', 1, NULL, NULL, 1, '2022-06-12 16:05:59');
 
 -- --------------------------------------------------------
 
@@ -463,8 +415,6 @@ CREATE TABLE `user_queries` (
 -- Dumping data for table `user_queries`
 --
 
-INSERT INTO `user_queries` (`sr_no`, `name`, `email`, `subject`, `message`, `datentime`, `seen`) VALUES
-(11, 'touseef', 'ask.tjwebdev@gmail.com', 'This is one subject', 'orem ipsum dolor sit amet, consectetur adipisicing elit. Quos voluptate vero sed tempore illo atque beatae asperiores, adipisci dicta quia nisi voluptates im', '2022-03-11 00:00:00', 1);
 
 --
 -- Indexes for dumped tables
