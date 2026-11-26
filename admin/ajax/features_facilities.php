@@ -17,6 +17,9 @@
   if(isset($_POST['get_features']))
   {
     $res = selectAll('features');
+    if(mysqli_num_rows($res)==0){
+      echo empty_row(3, 'No features yet', 'Add things like &ldquo;Balcony&rdquo; or &ldquo;Kitchenette&rdquo; to describe your rooms.', 'bi-stars');
+    }
     $i=1;
 
     while($row = mysqli_fetch_assoc($res))
@@ -81,6 +84,9 @@
   if(isset($_POST['get_facilities']))
   {
     $res = selectAll('facilities');
+    if(mysqli_num_rows($res)==0){
+      echo empty_row(5, 'No facilities yet', 'Add amenities like Wi-Fi or Spa with an icon and a short description.', 'bi-cup-hot');
+    }
     $i=1;
     $path = FACILITIES_IMG_PATH;
 

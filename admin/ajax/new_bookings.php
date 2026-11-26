@@ -19,7 +19,7 @@
     $table_data = "";
 
     if(mysqli_num_rows($res)==0){
-      echo"<b>No Data Found!</b>";
+      echo empty_row_search(5, $frm_data['search'], 'No new bookings', 'Paid reservations waiting for a room number will show up here.', 'bi-calendar-check');
       exit;
     }
 

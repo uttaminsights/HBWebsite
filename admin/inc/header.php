@@ -1,12 +1,19 @@
-<div class="container-fluid bg-dark text-light p-3 d-flex align-items-center justify-content-between sticky-top">
-  <h3 class="mb-0 h-font">HB WEBSITE</h3>
-  <a href="logout.php" class="btn btn-light btn-sm">LOG OUT</a>
+<?php
+  // brand name comes from Settings (site title)
+  require_once(__DIR__.'/db_config.php');
+  $admin_brand = mysqli_fetch_assoc(mysqli_query($con,"SELECT `site_title` FROM `settings` WHERE `sr_no`=1"));
+  $admin_brand = $admin_brand ? $admin_brand['site_title'] : 'Admin';
+  $admin_initial = htmlspecialchars(mb_substr(html_entity_decode($admin_brand),0,1));
+?>
+<div class="container-fluid admin-topbar text-light p-3 d-flex align-items-center justify-content-between sticky-top">
+  <h3 class="mb-0 h-font"><span class="brand-mark"><?php echo $admin_initial ?></span> <?php echo $admin_brand ?> <span class="tag ms-2">Admin</span></h3>
+  <a href="logout.php" class="btn btn-outline-light btn-sm"><i class="bi bi-box-arrow-right me-1"></i> Log out</a>
 </div>
 
 <div class="col-lg-2 bg-dark border-top border-3 border-secondary" id="dashboard-menu">
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid flex-lg-column align-items-stretch">
-      <h4 class="mt-2 text-light">ADMIN PANEL</h4>
+      <h4 class="mt-3 mb-2 text-light">NAVIGATION</h4>
       <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminDropdown" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

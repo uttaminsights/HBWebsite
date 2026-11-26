@@ -1,0 +1,25 @@
+# Pages start the session after some HTML is printed, so output buffering must be on.
+<IfModule mod_php.c>
+  php_value output_buffering 4096
+</IfModule>
+<IfModule mod_php7.c>
+  php_value output_buffering 4096
+</IfModule>
+
+Options -Indexes
+
+# Never serve config, SQL dumps, dotfiles or docs directly.
+<FilesMatch "^(config\.php|config\.example\.php|\.user\.ini|README\.md)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(sql|log|md|yml)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git
+RedirectMatch 404 /DATABASE_FILE/
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

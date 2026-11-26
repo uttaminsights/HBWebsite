@@ -7,28 +7,14 @@
   <link  rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
   <?php require('inc/links.php'); ?>
   <title><?php echo $settings_r['site_title'] ?> - HOME</title>
-  <style>
-    .availability-form{
-      margin-top: -50px;
-      z-index: 2;
-      position: relative;
-    }
-
-    @media screen and (max-width: 575px) {
-      .availability-form{
-        margin-top: 25px;
-        padding: 0 35px;
-      } 
-    }
-  </style>
 </head>
 <body class="bg-light">
 
   <?php require('inc/header.php'); ?>
 
-  <!-- Carousel -->
+  <!-- Hero -->
 
-  <div class="container-fluid px-lg-4 mt-4">
+  <section class="hero">
     <div class="swiper swiper-container">
       <div class="swiper-wrapper">
         <?php 
@@ -38,21 +24,31 @@
             $path = CAROUSEL_IMG_PATH;
             echo <<<data
               <div class="swiper-slide">
-                <img src="$path$row[image]" class="w-100 d-block">
+                <img src="$path$row[image]" alt="">
               </div>
             data;
           }
         ?>
       </div>
     </div>
-  </div>
+    <div class="container hero-content">
+      <span class="hero-pill"><b><?php echo date('Y') ?></b> Boutique Hotel &middot; Prayagraj</span>
+      <h1><?php echo $settings_r['site_title'] ?></h1>
+      <h2 class="hero-sub">Stay Somewhere That Feels Like You</h2>
+      <div class="hero-actions">
+        <a href="rooms.php" class="btn btn-light-solid">Book a Stay</a>
+      </div>
+    </div>
+    
+    <div class="hero-glow" aria-hidden="true"></div>
+  </section>
 
   <!-- check availability form -->
 
   <div class="container availability-form">
     <div class="row">
       <div class="col-lg-12 bg-white shadow p-4 rounded">
-        <h5 class="mb-4">Check Booking Availability</h5>
+        <h5 class="mb-4">Check availability</h5>
         <form action="rooms.php">
           <div class="row align-items-end">
             <div class="col-lg-3 mb-3">
@@ -89,7 +85,7 @@
             </div>
             <input type="hidden" name="check_availability">
             <div class="col-lg-1 mb-lg-3 mt-2">
-              <button type="submit" class="btn text-white shadow-none custom-bg">Submit</button>
+              <button type="submit" class="btn text-white shadow-none custom-bg w-100" aria-label="Search"><i class="bi bi-search"></i></button>
             </div>
           </div>
         </form>
@@ -99,7 +95,19 @@
 
   <!-- Our Rooms -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">OUR ROOMS</h2>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Comfy rooms</span><span>Rooftop breakfasts</span><span>24/7 crew</span><span>Spa days</span><span>Book direct &amp; save</span>
+      <span>Comfy rooms</span><span>Rooftop breakfasts</span><span>24/7 crew</span><span>Spa days</span><span>Book direct &amp; save</span>
+    </div>
+  </div>
+
+  <div class="section-title reveal" id="rooms">
+    <span class="eyebrow">01 &middot; Rooms</span>
+    <h2 class="h-font m-0">Pick your <span class="gold-text">perfect</span> room</h2>
+    <div class="h-line"></div>
+    <p>Calm, considered spaces for a night or a fortnight &mdash; everything you need and nothing you don&rsquo;t.</p>
+  </div>
 
   <div class="container">
     <div class="row">
@@ -108,8 +116,11 @@
             
         $room_res = select("SELECT * FROM `rooms` WHERE `status`=? AND `removed`=? ORDER BY `id` DESC LIMIT 3",[1,0],'ii');
 
+        $room_no = 0;
         while($room_data = mysqli_fetch_assoc($room_res))
         {
+          $room_no++;
+          $room_no_txt = str_pad($room_no, 2, '0', STR_PAD_LEFT);
           // get features of room
 
           $fea_q = mysqli_query($con,"SELECT f.name FROM `features` f 
@@ -186,12 +197,15 @@
           // print room card
 
           echo <<<data
-            <div class="col-lg-4 col-md-6 my-3">
-              <div class="card border-0 shadow" style="max-width: 350px; margin: auto;">
-                <img src="$room_thumb" class="card-img-top">
-                <div class="card-body">
+            <div class="col-lg-4 col-md-6 my-3 reveal">
+              <div class="card room-card">
+                <div class="media">
+                  <span class="room-no">No. $room_no_txt</span>
+                  <img src="$room_thumb" alt="$room_data[name]" loading="lazy">
+                  <span class="price-chip">₹$room_data[price] <small>/ night</small></span>
+                </div>
+                <div class="card-body p-4">
                   <h5>$room_data[name]</h5>
-                  <h6 class="mb-4">₹$room_data[price] per night</h6>
                   <div class="features mb-4">
                     <h6 class="mb-1">Features</h6>
                     $features_data
@@ -210,9 +224,9 @@
                     </span>
                   </div>
                   $rating_data
-                  <div class="d-flex justify-content-evenly mb-2">
+                  <div class="d-flex gap-2 mb-1">
                     $book_btn
-                    <a href="room_details.php?id=$room_data[id]" class="btn btn-sm btn-outline-dark shadow-none">More details</a>
+                    <a href="room_details.php?id=$room_data[id]" class="btn btn-sm btn-outline-dark shadow-none">Details</a>
                   </div>
                 </div>
               </div>
@@ -224,14 +238,19 @@
       ?>
 
       <div class="col-lg-12 text-center mt-5">
-        <a href="rooms.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">More Rooms >>></a>
+        <a href="rooms.php" class="btn btn-outline-dark shadow-none">View all rooms <i class="bi bi-arrow-right ms-1"></i></a>
       </div>
     </div>
   </div>
 
   <!-- Our Facilities -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">OUR FACILITIES</h2>
+  <div class="section-title reveal">
+    <span class="eyebrow">02 &middot; Perks</span>
+    <h2 class="h-font m-0">All the <span class="gold-text">good stuff</span></h2>
+    <div class="h-line"></div>
+    <p>The little things that make a stay effortless.</p>
+  </div>
 
   <div class="container">
     <div class="row justify-content-evenly px-lg-0 px-md-0 px-5">
@@ -241,23 +260,48 @@
 
         while($row = mysqli_fetch_assoc($res)){
           echo<<<data
-            <div class="col-lg-2 col-md-2 text-center bg-white rounded shadow py-4 my-3">
-              <img src="$path$row[icon]" width="60px">
-              <h5 class="mt-3">$row[name]</h5>
+            <div class="col-lg-2 col-md-3 col-6 my-3 reveal">
+              <div class="facility-tile text-center py-4 px-2 h-100">
+                <img src="$path$row[icon]" width="52" alt="">
+                <h5 class="mt-3 mb-0">$row[name]</h5>
+              </div>
             </div>
           data;
         }
       ?>
 
       <div class="col-lg-12 text-center mt-5">
-        <a href="facilities.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">More Facilities >>></a>
+        <a href="facilities.php" class="btn btn-outline-dark shadow-none">All facilities <i class="bi bi-arrow-right ms-1"></i></a>
       </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="container reveal">
+    <div class="stats-strip row text-center g-4 mx-0">
+      <?php
+        $room_total = mysqli_fetch_assoc(mysqli_query($con,"SELECT COUNT(*) c FROM `rooms` WHERE `status`=1 AND `removed`=0"))['c'];
+        $avg_rating = mysqli_fetch_assoc(mysqli_query($con,"SELECT ROUND(AVG(rating),1) r FROM `rating_review`"))['r'];
+      ?>
+      <div class="col-6 col-md-3"><div class="num"><?php echo $room_total ?></div><div class="lbl">Room types</div></div>
+      <div class="col-6 col-md-3"><div class="num">&#8377;0</div><div class="lbl">Hidden fees</div></div>
+      <?php if($avg_rating): ?>
+      <div class="col-6 col-md-3"><div class="num"><?php echo $avg_rating ?></div><div class="lbl">Average rating</div></div>
+      <?php else: ?>
+      <div class="col-6 col-md-3"><div class="num">New</div><div class="lbl">Now taking bookings</div></div>
+      <?php endif; ?>
+      <div class="col-6 col-md-3"><div class="num">24/7</div><div class="lbl">Concierge</div></div>
     </div>
   </div>
 
   <!-- Testimonials -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">TESTIMONIALS</h2>
+  <div class="section-title reveal">
+    <span class="eyebrow">03 &middot; Reviews</span>
+    <h2 class="h-font m-0">Guests <span class="gold-text">love</span> it here</h2>
+    <div class="h-line"></div>
+    <p>Kind words from people who stayed with us.</p>
+  </div>
 
   <div class="container mt-5">
     <div class="swiper swiper-testimonials">
@@ -273,7 +317,10 @@
           $img_path = USERS_IMG_PATH;
 
           if(mysqli_num_rows($review_res)==0){
-            echo 'No reviews yet!';
+            echo "<div class='swiper-slide bg-white p-4 text-center'>
+                <p class='mb-1' style='color:#fff;font-size:1.05rem'>No reviews yet &mdash; our first guests are on their way.</p>
+                <p class='mb-0'>Stayed with us? Share your experience from <a href='bookings.php'>My bookings</a> after check-out.</p>
+              </div>";
           }
           else
           {
@@ -283,11 +330,13 @@
               for($i=1; $i<$row['rating']; $i++){
                 $stars .= " <i class='bi bi-star-fill text-warning'></i>";
               }
+              // reviewers are shown with an initial badge instead of their profile photo
+              $initial = htmlspecialchars(mb_strtoupper(mb_substr(html_entity_decode($row['uname']),0,1)));
 
               echo<<<slides
                 <div class="swiper-slide bg-white p-4">
                   <div class="profile d-flex align-items-center mb-3">
-                    <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="30px">
+                    <span class="avatar-initial" aria-hidden="true">$initial</span>
                     <h6 class="m-0 ms-2">$row[uname]</h6>
                   </div>
                   <p>
@@ -306,21 +355,26 @@
       <div class="swiper-pagination"></div>
     </div>
     <div class="col-lg-12 text-center mt-5">
-      <a href="about.php" class="btn btn-sm btn-outline-dark rounded-0 fw-bold shadow-none">Know More >>></a>
+      <a href="about.php" class="btn btn-outline-dark shadow-none">Our story <i class="bi bi-arrow-right ms-1"></i></a>
     </div>
   </div>
 
   <!-- Reach us -->
 
-  <h2 class="mt-5 pt-4 mb-4 text-center fw-bold h-font">REACH US</h2>
+  <div class="section-title reveal" id="reach-us">
+    <span class="eyebrow">04 &middot; Find us</span>
+    <h2 class="h-font m-0">Come say <span class="gold-text">hi</span></h2>
+    <div class="h-line"></div>
+    <p>We&rsquo;re easy to find and always happy to help.</p>
+  </div>
 
   <div class="container">
     <div class="row">
-      <div class="col-lg-8 col-md-8 p-4 mb-lg-0 mb-3 bg-white rounded">
-        <iframe class="w-100 rounded" height="320px" src="<?php echo $contact_r['iframe'] ?>" loading="lazy"></iframe>
+      <div class="col-lg-8 col-md-8 p-3 mb-lg-0 mb-3 bg-white rounded shadow-sm">
+        <iframe class="w-100 rounded" height="320px" src="<?php echo safe_url($contact_r['iframe']) ?>" loading="lazy"></iframe>
       </div>
       <div class="col-lg-4 col-md-4">
-        <div class="bg-white p-4 rounded mb-4">
+        <div class="bg-white p-4 rounded shadow-sm mb-4">
           <h5>Call us</h5>
           <a href="tel: +<?php echo $contact_r['pn1'] ?>" class="d-inline-block mb-2 text-decoration-none text-dark">
             <i class="bi bi-telephone-fill"></i> +<?php echo $contact_r['pn1'] ?>
@@ -337,7 +391,7 @@
           
           ?>
         </div>
-        <div class="bg-white p-4 rounded mb-4">
+        <div class="bg-white p-4 rounded shadow-sm mb-4">
           <h5>Follow us</h5>
           <?php 
             if($contact_r['tw']!=''){
@@ -436,8 +490,9 @@
 
   <script>
     var swiper = new Swiper(".swiper-container", {
-      spaceBetween: 30,
+      spaceBetween: 0,
       effect: "fade",
+      speed: 1200,
       loop: true,
       autoplay: {
         delay: 3500,
@@ -445,15 +500,17 @@
       }
     });
 
+    // only loop when there are enough reviews; otherwise Swiper clones the few cards
+    var testimonialCount = document.querySelectorAll('.swiper-testimonials .swiper-slide').length;
     var swiper = new Swiper(".swiper-testimonials", {
       effect: "coverflow",
       grabCursor: true,
       centeredSlides: true,
       slidesPerView: "auto",
       slidesPerView: "3",
-      loop: true,
+      loop: testimonialCount > 3,
       coverflowEffect: {
-        rotate: 50,
+        rotate: 0,
         stretch: 0,
         depth: 100,
         modifier: 1,

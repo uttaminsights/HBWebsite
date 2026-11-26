@@ -58,7 +58,7 @@
     <div class="row">
 
       <div class="col-12 my-5 mb-4 px-4">
-        <h2 class="fw-bold">CONFIRM BOOKING</h2>
+        <h2 class="h-font">Confirm your stay</h2>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none">HOME</a>
           <span class="text-secondary"> > </span>

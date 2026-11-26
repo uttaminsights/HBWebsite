@@ -10,7 +10,7 @@
     $frm_data = filteration($_POST);
 
     $limit = 2;
-    $page = $frm_data['page'];
+    $page = max(1,(int)$frm_data['page']);
     $start = ($page-1) * $limit;
 
     $query = "SELECT bo.*, bd.* FROM `booking_order` bo
@@ -29,7 +29,7 @@
     $total_rows = mysqli_num_rows($res);
 
     if($total_rows==0){
-      $output = json_encode(["table_data"=>"<b>No Data Found!</b>", "pagination"=>'']);
+      $output = json_encode(["table_data"=>empty_row_search(6, $frm_data['search'], 'No booking records yet', 'Checked-in, refunded and failed bookings are archived here.', 'bi-journal-text'), "pagination"=>'']);
       echo $output;
       exit;
     }

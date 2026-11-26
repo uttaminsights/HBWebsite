@@ -15,7 +15,7 @@
     <div class="row">
 
       <div class="col-12 my-5 mb-3 px-4">
-        <h2 class="fw-bold">PAYMENT STATUS</h2>
+        <h2 class="h-font">Payment status</h2>
       </div>
 
       <?php 
@@ -37,6 +37,7 @@
         }
 
         $booking_fetch = mysqli_fetch_assoc($booking_res);
+        $booking_fetch['trans_resp_msg'] = htmlspecialchars((string)$booking_fetch['trans_resp_msg'],ENT_QUOTES);
 
         if($booking_fetch['trans_status']=="TXN_SUCCESS")
         {

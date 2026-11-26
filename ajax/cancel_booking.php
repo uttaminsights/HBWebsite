@@ -4,7 +4,7 @@
   require('../admin/inc/essentials.php');
 
   date_default_timezone_set("Asia/Kolkata");
-  session_start();
+  app_session_start();
 
 
   if(!(isset($_SESSION['login']) && $_SESSION['login']==true)){
@@ -16,7 +16,7 @@
     $frm_data = filteration($_POST);
 
     $query = "UPDATE `booking_order` SET `booking_status`=?, `refund`=? 
-      WHERE `booking_id`=? AND `user_id`=?";
+      WHERE `booking_id`=? AND `user_id`=? AND `booking_status`='booked' AND `arrival`=0";
 
     $values = ['cancelled',0,$frm_data['id'],$_SESSION['uId']];
 

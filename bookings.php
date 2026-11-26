@@ -22,7 +22,7 @@
     <div class="row">
 
       <div class="col-12 my-5 px-4">
-        <h2 class="fw-bold">BOOKINGS</h2>
+        <h2 class="h-font">My bookings</h2>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none">HOME</a>
           <span class="text-secondary"> > </span>
@@ -42,6 +42,17 @@
           ORDER BY bo.booking_id DESC";
 
         $result = select($query,[$_SESSION['uId']],'i');
+
+        if(mysqli_num_rows($result)==0){
+          echo "<div class='col-12 px-4'>
+            <div class='bg-white rounded p-5 text-center'>
+              <i class='bi bi-calendar-heart' style='font-size:2rem;color:#a58bff'></i>
+              <h5 class='mt-3 mb-2'>No bookings yet</h5>
+              <p class='mb-4'>Once you reserve a room, your stays, receipts and cancellations will all live here.</p>
+              <a href='rooms.php' class='btn custom-bg'>Browse rooms</a>
+            </div>
+          </div>";
+        }
 
         while($data = mysqli_fetch_assoc($result))
         {

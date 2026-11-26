@@ -4,7 +4,7 @@
   require('../admin/inc/essentials.php');
 
   date_default_timezone_set("Asia/Kolkata");
-  session_start();
+  app_session_start();
 
 
   if(!(isset($_SESSION['login']) && $_SESSION['login']==true)){
@@ -15,9 +15,25 @@
   {
     $frm_data = filteration($_POST);
 
-    $upd_query = "UPDATE `booking_order` SET `rate_review`=? WHERE `booking_id`=? AND `user_id`=?";
+    $rating = (int)($frm_data['rating'] ?? 0);
+    if($rating < 1 || $rating > 5){
+      echo 0;
+      exit;
+    }
+
+    $upd_query = "UPDATE `booking_order` SET `rate_review`=? WHERE `booking_id`=? AND `user_id`=?
+      AND `booking_status`='booked' AND `arrival`=1 AND (`rate_review` IS NULL OR `rate_review`=0)";
     $upd_values = [1,$frm_data['booking_id'],$_SESSION['uId']];
     $upd_result = update($upd_query,$upd_values,'iii');
+
+    if($upd_result != 1){
+      echo 0;
+      exit;
+    }
+
+    $room_fetch = mysqli_fetch_assoc(select("SELECT `room_id` FROM `booking_order` WHERE `booking_id`=?",[$frm_data['booking_id']],'i'));
+    $frm_data['room_id'] = $room_fetch['room_id'];
+    $frm_data['rating'] = $rating;
 
     $ins_query = "INSERT INTO `rating_review`(`booking_id`, `room_id`, `user_id`, `rating`, `review`)
       VALUES (?,?,?,?,?)";

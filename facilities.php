@@ -18,14 +18,11 @@
 
   <?php require('inc/header.php'); ?>
 
-  <div class="my-5 px-4">
-    <h2 class="fw-bold h-font text-center">OUR FACILITIES</h2>
-    <div class="h-line bg-dark"></div>
-    <p class="text-center mt-3">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Temporibus incidunt odio quos <br> dolore commodi repudiandae 
-      tenetur consequuntur et similique asperiores.
-    </p>
+  <div class="section-title" style="margin-top:4rem">
+    <span class="eyebrow">Amenities</span>
+    <h2 class="h-font m-0">Facilities</h2>
+    <div class="h-line"></div>
+    <p>From fast Wi-Fi to round-the-clock room service, everything here is designed to make your stay effortless.</p>
   </div>
 
   <div class="container">

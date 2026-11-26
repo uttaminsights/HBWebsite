@@ -33,7 +33,8 @@
     <div class="row">
 
       <div class="col-12 my-5 mb-4 px-4">
-        <h2 class="fw-bold"><?php echo $room_data['name'] ?></h2>
+        <span class="eyebrow">Room details</span>
+        <h2 class="h-font" style="font-size:clamp(2.2rem,4vw,3rem)"><?php echo $room_data['name'] ?></h2>
         <div style="font-size: 14px;">
           <a href="index.php" class="text-secondary text-decoration-none">HOME</a>
           <span class="text-secondary"> > </span>
@@ -91,7 +92,7 @@
             <?php 
 
               echo<<<price
-                <h4>₹$room_data[price] per night</h4>
+                <h4 class="h-font" style="font-size:2rem">₹$room_data[price] <small class="text-muted" style="font-size:.9rem">/ night</small></h4>
               price;
 
               $rating_q = "SELECT AVG(rating) AS `avg_rating` FROM `rating_review`
@@ -209,7 +210,7 @@
             $img_path = USERS_IMG_PATH;
 
             if(mysqli_num_rows($review_res)==0){
-              echo 'No reviews yet!';
+              echo "<p class='mb-0'>No reviews for this room yet. Stayed here? You can rate it from <a href='bookings.php'>My bookings</a> after check-out.</p>";
             }
             else
             {
@@ -219,11 +220,13 @@
                 for($i=1; $i<$row['rating']; $i++){
                   $stars .= " <i class='bi bi-star-fill text-warning'></i>";
                 }
+                // reviewers are shown with an initial badge instead of their profile photo
+                $initial = htmlspecialchars(mb_strtoupper(mb_substr(html_entity_decode($row['uname']),0,1)));
 
                 echo<<<reviews
                   <div class="mb-4">
                     <div class="d-flex align-items-center mb-2">
-                      <img src="$img_path$row[profile]" class="rounded-circle" loading="lazy" width="30px">
+                      <span class="avatar-initial" aria-hidden="true">$initial</span>
                       <h6 class="m-0 ms-2">$row[uname]</h6>
                     </div>
                     <p class="mb-1">

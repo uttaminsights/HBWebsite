@@ -4,7 +4,7 @@
   require('../admin/inc/essentials.php');
   date_default_timezone_set("Asia/Kolkata");
 
-  session_start();
+  app_session_start();
 
   if(isset($_GET['fetch_rooms']))
   {
@@ -14,9 +14,15 @@
     // checkin and checkout filter validations
     if($chk_avail['checkin']!='' && $chk_avail['checkout']!='')
     {
-      $today_date = new DateTime(date("Y-m-d"));
-      $checkin_date = new DateTime($chk_avail['checkin']);
-      $checkout_date = new DateTime($chk_avail['checkout']);
+      try{
+        $today_date = new DateTime(date("Y-m-d"));
+        $checkin_date = new DateTime($chk_avail['checkin']);
+        $checkout_date = new DateTime($chk_avail['checkout']);
+      }
+      catch(Exception $e){
+        echo"<h3 class='text-center text-danger'>Invalid Dates Entered!</h3>";
+        exit;
+      }
   
       if($checkin_date == $checkout_date){
         echo"<h3 class='text-center text-danger'>Invalid Dates Entered!</h3>";
@@ -65,7 +71,7 @@
         $values = ['booked',$room_data['id'],$chk_avail['checkin'],$chk_avail['checkout']];
         $tb_fetch = mysqli_fetch_assoc(select($tb_query,$values,'siss'));
 
-        if(($room_data['quantity']-$tb_fetch['total_bookings'])==0){
+        if(($room_data['quantity']-$tb_fetch['total_bookings'])<=0){
           continue;
         }
       }
@@ -80,7 +86,7 @@
       $facilities_data = "";
       while($fac_row = mysqli_fetch_assoc($fac_q))
       {
-        if( in_array($fac_row['id'],$facility_list['facilities']) ){
+        if( in_array($fac_row['id'],$facility_list['facilities'] ?? []) ){
           $fac_count++;
         }
 
@@ -89,7 +95,7 @@
         </span>";
       }
 
-      if(count($facility_list['facilities'])!=$fac_count){
+      if(count($facility_list['facilities'] ?? [])!=$fac_count){
         continue;
       }
 
@@ -137,10 +143,10 @@
         <div class='card mb-4 border-0 shadow'>
           <div class='row g-0 p-3 align-items-center'>
             <div class='col-md-5 mb-lg-0 mb-md-0 mb-3'>
-              <img src='$room_thumb' class='img-fluid rounded'>
+              <img src='$room_thumb' class='img-fluid rounded w-100' style='aspect-ratio:4/3;object-fit:cover' alt='' loading='lazy'>
             </div>
             <div class='col-md-5 px-lg-3 px-md-3 px-0'>
-              <h5 class='mb-3'>$room_data[name]</h5>
+              <h5 class='mb-3 h-font' style='font-size:1.6rem'>$room_data[name]</h5>
               <div class='features mb-3'>
                 <h6 class='mb-1'>Features</h6>
                 $features_data
@@ -160,9 +166,9 @@
               </div>
             </div>
             <div class='col-md-2 mt-lg-0 mt-md-0 mt-4 text-center'>
-              <h6 class='mb-4'>₹$room_data[price] per night</h6>
+              <div class='mb-3'><span class='h-font' style='font-size:1.9rem'>₹$room_data[price]</span><div class='small text-muted'>per night</div></div>
               $book_btn
-              <a href='room_details.php?id=$room_data[id]' class='btn btn-sm w-100 btn-outline-dark shadow-none'>More details</a>
+              <a href='room_details.php?id=$room_data[id]' class='btn btn-sm w-100 btn-outline-dark shadow-none'>Details</a>
             </div>
           </div>
         </div>
@@ -175,7 +181,7 @@
       echo $output;
     }
     else{
-      echo"<h3 class='text-center text-danger'>No rooms to show!</h3>";
+      echo"<div class='text-center py-5'><i class='bi bi-calendar-x fs-1' style='color:var(--brass)'></i><h4 class='h-font mt-3'>No rooms match those filters</h4><p class='text-muted'>Try different dates or fewer filters.</p></div>";
     }
 
   }
