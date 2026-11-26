@@ -6,7 +6,7 @@
 Guests search rooms, check live availability, book and pay online, download PDF receipts and leave reviews.
 Hotel staff run everything from a dedicated admin dashboard.
 
-[![CI](https://github.com/uttaminsights/HBWebsite/actions/workflows/ci.yml/badge.svg)](https://github.com/uttaminsights/HBWebsite/actions/workflows/ci.yml)
+[![CI](https://github.com/uttaminsights/nivaara-hotel-booking/actions/workflows/ci.yml/badge.svg)](https://github.com/uttaminsights/nivaara-hotel-booking/actions/workflows/ci.yml)
 ![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4?logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?logo=bootstrap&logoColor=white)
@@ -88,8 +88,8 @@ Hotel staff run everything from a dedicated admin dashboard.
 
 ### 1. Get the code
 ```bash
-git clone https://github.com/uttaminsights/HBWebsite.git
-cd HBWebsite
+git clone https://github.com/uttaminsights/nivaara-hotel-booking.git
+cd nivaara-hotel-booking
 ```
 
 ### 2. Create the database
